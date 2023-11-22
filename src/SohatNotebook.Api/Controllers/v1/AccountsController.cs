@@ -181,7 +181,7 @@ public class AccountsController : BaseController
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Used by the refresh token
             }),
-            Expires = DateTime.UtcNow.AddHours(3), // Todo update the expiration time to minutes
+            Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTimeFrame), // Todo update the expiration time to minutes
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key), 
                 SecurityAlgorithms.HmacSha256Signature // Todo review the algorithm
