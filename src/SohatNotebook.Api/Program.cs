@@ -37,6 +37,22 @@ builder.Services.AddApiVersioning(opt =>
     opt.DefaultApiVersion = ApiVersion.Default;
 });
 
+// Getting the secret from the config.
+var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Secret"]!);
+
+var tokenValidationParameters = new TokenValidationParameters
+{
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(key),
+    ValidateIssuer = false, // ToDo Update
+    ValidateAudience = false,  // ToDo Update
+    RequireExpirationTime = false, // ToDo Update
+    ValidateLifetime = true
+};
+
+// Injecting into our DI container
+builder.Services.AddSingleton(tokenValidationParameters);
+
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -45,19 +61,8 @@ builder.Services.AddAuthentication(option =>
 })
 .AddJwtBearer(jwt =>
 {
-    // Getting the secret from the config.
-    var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Secret"]!);
-
     jwt.SaveToken = true;
-    jwt.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false, // ToDo Update
-        ValidateAudience = false,  // ToDo Update
-        RequireExpirationTime = false, // ToDo Update
-        ValidateLifetime = true
-    };
+    jwt.TokenValidationParameters = tokenValidationParameters;
 });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options 
