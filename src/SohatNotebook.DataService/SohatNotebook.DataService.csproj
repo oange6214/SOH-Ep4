@@ -23,8 +23,4 @@
     <ProjectReference Include="..\SohatNotebook.Entities\SohatNotebook.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
 </Project>
