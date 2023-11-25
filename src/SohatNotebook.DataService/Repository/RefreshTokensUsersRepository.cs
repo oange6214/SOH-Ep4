@@ -27,4 +27,41 @@ public class RefreshTokensUsersRepository : GenericRepository<RefreshToken>, IRe
             return new List<RefreshToken>();
         }
     }
+
+    public async Task<RefreshToken?> GetByRefreshToken(string refreshToken)
+    {
+        try
+        {
+            return await _dbSet.Where(x => x.Token.ToLower() == refreshToken.ToLower())
+                               .AsNoTracking()
+                               .FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "{Repo} GetByRefreshToken method has generated an error", typeof(RefreshTokensUsersRepository));
+            return null;
+        }
+    }
+
+    public async Task<bool> MarkRefreshTokenAsUsed(RefreshToken refreshToken)
+    {
+        try
+        {
+            var token = await _dbSet.Where(x => x.Token.ToLower() == refreshToken.Token.ToLower())
+                               .AsNoTracking()
+                               .FirstOrDefaultAsync();
+
+            if (token == null) 
+                return false;
+
+            token.IsUsed = refreshToken.IsUsed;
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "{Repo} MarkRefreshTokenAsUsed method has generated an error", typeof(RefreshTokensUsersRepository));
+            return false;
+        }
+    }
 }

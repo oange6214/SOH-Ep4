@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SohatNotebook.Authentication.Models.DTO.Incoming;
-public class TokenRequest
+namespace SohatNotebook.Authentication.Models.DTO.Generic;
+
+public class TokenData
 {
     [Required]
     public string Token { get; set; } = string.Empty;

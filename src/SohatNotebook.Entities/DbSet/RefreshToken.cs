@@ -25,5 +25,5 @@ public class RefreshToken : BaseEntity
     public DateTime ExpiryDate { get; set; }
 
     [ForeignKey(nameof(UserId))]
-    public IdentityUser User { get; set; }
+    public IdentityUser? User { get; set; }
 }
